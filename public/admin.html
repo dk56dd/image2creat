@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>后台管理 - GPT Image Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/admin.css">
+  </head>
+  <body>
+    <div class="admin-shell">
+      <header class="admin-topbar">
+        <a class="brand" href="/">
+          <span><i class="ri-sparkling-2-fill"></i></span>
+          GPT Image Studio
+        </a>
+        <nav>
+          <a href="/">前台</a>
+          <button id="logoutBtn" class="hidden" type="button">退出</button>
+        </nav>
+      </header>
+      <main id="adminApp"></main>
+      <div id="toastLayer" class="toast-layer"></div>
+    </div>
+    <script src="/admin.js" defer></script>
+  </body>
+</html>

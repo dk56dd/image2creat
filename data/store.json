@@ -1,0 +1,12 @@
+{
+  "settings": {
+    "openaiApiKey": "",
+    "model": "gpt-image-2",
+    "defaultCredits": 20,
+    "allowRegistration": true,
+    "requireApproval": false,
+    "maxImagesPerRequest": 1
+  },
+  "users": [],
+  "generations": []
+}

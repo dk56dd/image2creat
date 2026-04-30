@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GPT Image Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div id="app" class="app">
+      <div class="ambient" aria-hidden="true"></div>
+
+      <header class="topbar">
+        <button id="brandBtn" class="brand-btn" type="button">
+          <span class="brand-dot"><i class="ri-sparkling-2-fill"></i></span>
+          <span data-i18n="brand">Image Studio</span>
+        </button>
+        <nav class="top-actions" aria-label="主导航">
+          <button id="promptLibraryBtn" class="nav-pill" type="button">
+            <span class="sparkle-icon" aria-hidden="true">✨</span>
+            <span data-i18n="promptLibrary">提示词库</span>
+          </button>
+          <button id="imageEditorBtn" class="nav-pill" type="button">
+            <i class="ri-magic-line"></i>
+            <span data-i18n="imageEditor">图片编辑</span>
+          </button>
+          <button id="contactBtn" class="nav-pill" type="button">
+            <i class="ri-customer-service-2-line"></i>
+            <span data-i18n="contact">联系管理员</span>
+          </button>
+          <button id="langBtn" class="icon-pill" type="button" title="Language">中/EN</button>
+          <button id="creditsBtn" class="nav-pill hidden" type="button">
+            <i class="ri-coin-line"></i>
+            <span id="creditsText">0</span>
+          </button>
+          <button id="myWorksBtn" class="nav-pill hidden" type="button">
+            <i class="ri-gallery-view-2"></i>
+            <span data-i18n="myWorks">我的作品</span>
+          </button>
+          <button id="adminBtn" class="nav-pill hidden" type="button">
+            <i class="ri-settings-3-line"></i>
+            <span data-i18n="admin">后台</span>
+          </button>
+          <button id="loginBtn" class="dark-pill" type="button">
+            <i class="ri-login-circle-line"></i>
+            <span data-i18n="login">登录</span>
+          </button>
+          <button id="logoutBtn" class="nav-pill hidden" type="button">
+            <i class="ri-logout-circle-r-line"></i>
+          </button>
+        </nav>
+      </header>
+
+      <main id="homeView" class="home-view">
+        <section class="hero">
+          <div class="hero-video-layer" aria-hidden="true">
+            <video autoplay muted loop playsinline preload="metadata">
+              <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260302_085640_276ea93b-d7da-4418-a09b-2aa5b490e838.mp4" type="video/mp4">
+            </video>
+            <div class="hero-video-gradient"></div>
+          </div>
+          <p id="apiStatus" class="config-chip">Checking...</p>
+          <div class="daily-metric" aria-live="polite">
+            <span class="metric-stars">★★★★★</span>
+            <span id="todayGeneratedText">今日已生成 4,200+ 张图片</span>
+            <span class="metric-dots" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i>
+            </span>
+          </div>
+          <h1>
+            <span data-i18n="headPre">用想象力</span>
+            <em data-i18n="headItalic">创造</em>
+            <span data-i18n="headPost">世界</span>
+          </h1>
+          <p data-i18n="desc" class="hero-desc">用 GPT Image 将你的创意变为精美图片，只需描述你脑海中的画面。</p>
+          <div id="heroComposerMount" class="composer-mount"></div>
+          <p class="reviews"><i class="ri-image-circle-line"></i><span data-i18n="reviews">生成后会自动保存到你的图库</span></p>
+        </section>
+
+        <section id="recentSection" class="recent-section">
+          <div class="recent-header">
+            <h2 data-i18n="recentTitle">最近创作</h2>
+            <p data-i18n="recentSubtitle">来自你的灵感</p>
+          </div>
+          <div id="recentMasonry" class="recent-masonry"></div>
+        </section>
+
+        <section class="inspiration-band">
+          <div class="inspiration-head">
+            <span data-i18n="examplesLabel">灵感示例</span>
+            <button id="openLibraryInlineBtn" type="button">
+              <span data-i18n="viewMore">查看更多</span>
+              <i class="ri-arrow-right-line"></i>
+            </button>
+          </div>
+          <div id="exampleGrid" class="example-grid"></div>
+        </section>
+      </main>
+
+      <main id="chatView" class="chat-view hidden">
+        <div id="generationStatus" class="generation-status hidden">
+          <div class="paint-drip" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+          <span id="funMessage">Generating...</span>
+        </div>
+        <div id="historyList" class="history-list"></div>
+        <div class="bottom-spacer"></div>
+        <div id="stickyComposerMount" class="sticky-composer"></div>
+      </main>
+
+      <main id="libraryView" class="library-view hidden">
+        <section class="library-hero">
+          <span class="library-badge"><span class="sparkle-icon" aria-hidden="true">✨</span><span data-i18n="libraryBadge">精选提示词库</span></span>
+          <h1 data-i18n="libraryTitle">发现无尽创意</h1>
+          <p data-i18n="librarySubtitle">搜索风格、场景或用途，一键带入生成台。</p>
+          <form id="librarySearchForm" class="library-search">
+            <span data-i18n="librarySearchLabel">检索</span>
+            <i class="ri-search-line"></i>
+            <input id="librarySearchInput" placeholder="搜索提示词、风格或元素...">
+            <button type="submit" data-i18n="search">搜索</button>
+          </form>
+          <div id="tagFilters" class="tag-filters"></div>
+        </section>
+        <section id="promptGrid" class="prompt-grid"></section>
+      </main>
+
+      <main id="editorView" class="editor-view hidden">
+        <section class="editor-stage">
+          <div class="editor-header">
+            <button class="editor-brand" type="button" data-editor-home>
+              <span class="brand-dot"><i class="ri-image-spark-line"></i></span>
+              <span data-i18n="imageEditor">图片编辑</span>
+            </button>
+            <div class="editor-tabs" aria-label="创作模式">
+              <button type="button" data-editor-create>
+                <i class="ri-sparkling-2-line"></i>
+                <span data-i18n="create">生成</span>
+              </button>
+              <button class="active" type="button">
+                <i class="ri-pencil-ruler-2-line"></i>
+                <span data-i18n="editImage">编辑</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="editor-workspace">
+            <div class="editor-toolbar" role="toolbar" aria-label="编辑工具">
+              <button class="active" type="button" data-editor-tool="brush" title="画笔"><i class="ri-brush-line"></i></button>
+              <button type="button" data-editor-tool="rect" title="矩形"><i class="ri-checkbox-blank-line"></i></button>
+              <button type="button" data-editor-tool="eraser" title="橡皮擦"><i class="ri-eraser-line"></i></button>
+              <button type="button" data-editor-undo title="撤销"><i class="ri-arrow-go-back-line"></i></button>
+              <input id="editorColorInput" type="color" value="#7c3aed" title="标记颜色">
+            </div>
+            <div id="editorCanvasArea" class="editor-canvas-area">
+              <label id="editorUploadCard" class="editor-upload-card">
+                <i class="ri-image-add-line"></i>
+                <strong data-i18n="uploadEditImage">上传或从作品中选择图片</strong>
+                <span data-i18n="uploadEditHint">支持画笔、矩形选区和局部编辑描述</span>
+                <input id="editorUploadInput" type="file" accept="image/*">
+              </label>
+              <div id="editorImageFrame" class="editor-image-frame hidden">
+                <div id="editorImageScaler" class="editor-image-scaler">
+                  <img id="editorSourceImage" alt="编辑图片">
+                  <canvas id="editorMaskCanvas"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="editor-zoom">
+              <button type="button" data-editor-zoom="-"><i class="ri-subtract-line"></i></button>
+              <span id="editorZoomText">100%</span>
+              <button type="button" data-editor-zoom="+"><i class="ri-add-line"></i></button>
+            </div>
+            <label class="editor-keyboard" title="快捷键"><i class="ri-keyboard-line"></i></label>
+            <form id="editorPromptForm" class="editor-prompt-bar">
+              <label class="editor-attach">
+                <i class="ri-image-add-line"></i>
+                <input id="editorBottomUploadInput" type="file" accept="image/*">
+              </label>
+              <i class="ri-sparkling-2-fill editor-prompt-icon"></i>
+              <input id="editorPromptInput" placeholder="让背景池塘开满荷花">
+              <label class="square-toggle editor-public-toggle">
+                <span data-i18n="publishToSquare">公开到广场</span>
+                <input id="editorPublicInput" type="checkbox">
+                <span class="toggle-track" aria-hidden="true"></span>
+              </label>
+              <button type="submit">
+                <span data-i18n="create">生成</span>
+                <i class="ri-arrow-right-line"></i>
+              </button>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <template id="composerTemplate">
+        <form class="composer">
+          <div class="composer-head">
+            <button class="model-chip options-toggle" type="button">
+              <span class="model-label">GPT-IMAGE-2</span>
+            </button>
+            <label class="square-toggle">
+              <span data-i18n="publishToSquare">公开到广场</span>
+              <input class="public-input" type="checkbox">
+              <span class="toggle-track" aria-hidden="true"></span>
+            </label>
+          </div>
+          <div class="reference-row hidden"></div>
+          <div class="composer-bar">
+            <label class="add-reference-button" title="Reference image">
+              <i class="ri-add-line"></i>
+              <input class="reference-input" type="file" accept="image/*" multiple>
+            </label>
+            <textarea class="prompt-box" rows="1" placeholder="描述你想创作的图片..."></textarea>
+            <div class="composer-spacer"></div>
+            <button class="send-button" type="submit">
+              <span data-i18n="create">生成</span>
+            </button>
+          </div>
+          <div class="advanced-options hidden">
+            <label>
+              <span data-i18n="size">尺寸</span>
+              <select class="size-input">
+                <option value="auto">Auto</option>
+                <option value="1024x1024">1:1</option>
+                <option value="1024x1536">2:3</option>
+                <option value="1536x1024">3:2</option>
+                <option value="2048x2048">2K 1:1</option>
+                <option value="2048x3072">2K 2:3</option>
+                <option value="3072x2048">2K 3:2</option>
+                <option value="2880x3840">4K 3:4</option>
+                <option value="3840x2880">4K 4:3</option>
+                <option value="custom">自定义</option>
+              </select>
+            </label>
+            <div class="custom-size-row hidden">
+              <label>
+                <span>宽度</span>
+                <input class="custom-width-input" type="number" min="1024" max="3840" step="16" value="2048">
+              </label>
+              <label>
+                <span>高度</span>
+                <input class="custom-height-input" type="number" min="1024" max="3840" step="16" value="2048">
+              </label>
+            </div>
+            <label>
+              <span data-i18n="quality">质量</span>
+              <select class="quality-input">
+                <option value="auto">Auto</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="background">背景</span>
+              <select class="background-input">
+                <option value="auto">Auto</option>
+                <option value="opaque">Opaque</option>
+                <option value="transparent">Transparent</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="format">格式</span>
+              <select class="format-input">
+                <option value="png">PNG</option>
+                <option value="webp">WebP</option>
+                <option value="jpeg">JPEG</option>
+              </select>
+            </label>
+          </div>
+        </form>
+      </template>
+
+      <div id="modalLayer" class="modal-layer hidden"></div>
+      <div id="toastLayer" class="toast-layer"></div>
+    </div>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
