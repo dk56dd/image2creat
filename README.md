@@ -17,7 +17,11 @@
 - 支持参考图上传预览、图片编辑、矩形/画笔标注区域后重新生成
 - 支持常用比例、2K、4K 和自定义尺寸
 - MySQL 持久化用户、设置、积分、生成记录和审计日志
-
+  ##图片预览
+![GitHub图像](/output/screencapture-38-22-89-219-3456-2026-04-30-14_03_52.png)
+![GitHub图像](output/screencapture-38-22-89-219-3456-2026-04-30-14_04_22.png)
+![GitHub图像](output/screencapture-38-22-89-219-3456-2026-04-30-14_04_34.png)
+![GitHub图像](output/screencapture-38-22-89-219-3456-2026-04-30-14_33_11.png)
 ## Tech Stack
 
 - Node.js 22+
