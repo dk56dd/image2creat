@@ -164,7 +164,7 @@ node scripts/smoke-test.js
 ├── .env.example        # Safe environment template
 └── README.md
 ```
-
+鸣谢：[linuxdo](https://linux.do/)
 ## License
 
 MIT
